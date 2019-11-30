@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="cutePawsViewModel"
+            type="com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel" />
+
+        <!--
+        <variable
+            name="cutePawsItemListener"
+            type="com.anibalbastias.android.cutepaws.presentation.ui.breeds.interfaces.CutePawsItemListener" />
+        -->
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/cutePawsToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:theme="@style/ToolBarDetailsStyle"
+            app:titleTextColor="@color/primaryColor"
+            tools:title="@string/app_name" />
+
+        <com.anibalbastias.android.cutepaws.presentation.util.widget.DotLoadingIndicatorView
+            android:id="@+id/cutePawsLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:visibility="@{cutePawsViewModel.isLoading == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cutePawsToolbar" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/cutePawsListSwipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="@{cutePawsViewModel.isLoading == false ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cutePawsToolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cutePawsListRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp"
+                android:scrollbars="vertical"
+                android:visibility="visible"
+                tools:listitem="@layout/view_cell_breed_item" />
+
+            <!--
+
+            bind:loadAdapterData="@{cutePawsViewModel.cutePawsList}"
+                bind:loadAdapterLayout="@{cutePawsViewModel.cutePawsItemLayout}"
+                bind:loadAdapterListener="@{cutePawsItemListener}"
+            -->
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <include
+            android:id="@+id/cutePawsEmptyContainer"
+            layout="@layout/view_cell_shop_cart_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cutePawsToolbar"
+            tools:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
