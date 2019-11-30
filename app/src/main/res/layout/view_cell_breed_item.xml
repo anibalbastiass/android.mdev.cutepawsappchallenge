@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.anibalbastias.android.cutepaws.data.dataStoreFactory.breeds.model.CutePawsData" />
+
+        <variable
+            name="clickHandler"
+            type="com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler" />
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchRecentItemContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16sp"
+        android:layout_marginTop="16sp"
+        android:layout_marginEnd="16sp"
+        android:background="@color/white"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="false">
+
+        <!--
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/cutePawsItemImageView"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toTopOf="parent"
+                bind:layout_constraintWidth_percent="0.2"
+                bind:setImageUrl="@{item.imageUrl}"
+                tools:src="@mipmap/ic_launcher"
+                android:contentDescription="@string/itemProductDescription" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cutePawsItemContent"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                bind:layout_constraintEnd_toStartOf="@+id/cutePawsItemCounters"
+                bind:layout_constraintHorizontal_weight="1"
+                bind:layout_constraintStart_toEndOf="@+id/cutePawsItemImageView"
+                bind:layout_constraintTop_toTopOf="parent"
+                bind:layout_constraintWidth_percent="0.5">
+
+                <TextView
+                    android:id="@+id/cutePawsItemTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/opensans_semibold"
+                    android:maxLines="2"
+                    android:text="@{item.title}"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="14sp"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    tools:text="Title" />
+
+                <TextView
+                    android:id="@+id/cutePawsItemPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/opensans_regular"
+                    android:maxLines="1"
+                    android:text="@{item.productAmountData.currency +` `+item.productAmountData.value}"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/sp12"
+                    bind:layout_constraintBottom_toTopOf="@+id/cutePawsItemSubtitle"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/cutePawsItemTitle"
+                    tools:text="Subtitle" />
+
+                <TextView
+                    android:id="@+id/cutePawsItemSubtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/opensans_regular"
+                    android:maxLines="1"
+                    android:text="@{item.subtitle}"
+                    android:textSize="@dimen/sp12"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    tools:text="Price" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cutePawsItemCounters"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintHorizontal_weight="0.25"
+                bind:layout_constraintTop_toTopOf="parent"
+                bind:layout_constraintWidth_percent="0.3">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cutePawsItemAddButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="@{item.isUpdating == false}"
+                    android:maxLines="1"
+                    android:onClick="@{() -> clickHandler.onAddCounterItem(item)}"
+                    android:text="@string/addCartButton"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp12"
+                    android:visibility="@{item.counter.count == 0 ? View.VISIBLE : View.GONE}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cutePawsItemDecButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="@{item.isUpdating == false}"
+                    android:fontFamily="@font/opensans_semibold"
+                    android:maxLines="1"
+                    android:onClick="@{() -> clickHandler.onDecCounterItem(item)}"
+                    android:text="@string/dec_button"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:backgroundTint="@color/primaryColor"
+                    android:visibility="@{item.counter.count > 0 ? View.VISIBLE : View.GONE}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toStartOf="@+id/cutePawsItemIncButton"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:layout_constraintWidth_percent="0.5"
+                    tools:visibility="visible"
+                    tools:targetApi="lollipop" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cutePawsItemIncButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/accentColor"
+                    android:clickable="@{item.isUpdating == false}"
+                    android:fontFamily="@font/opensans_semibold"
+                    android:maxLines="1"
+                    android:onClick="@{() -> clickHandler.onIncCounterItem(item)}"
+                    android:text="@string/inc_button"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:visibility="@{item.counter.count > 0 ? View.VISIBLE : View.GONE}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:layout_constraintWidth_percent="0.5"
+                    tools:targetApi="lollipop"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/cutePawsItemSum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_semibold"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@{item.counter.count + ` PC`}"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="13sp"
+                    android:visibility="@{item.counter.count > 0 ? View.VISIBLE : View.GONE}"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/cutePawsItemDecButton"
+                    tools:text="3 pc"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    -->
+    </androidx.cardview.widget.CardView>
+
+
+</layout>

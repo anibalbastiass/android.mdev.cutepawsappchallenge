@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/cutepaws_search_nav_graph"
+        app:startDestination="@id/cutePawsFragment"
+        tools:ignore="UnusedNavigation">
+
+    <fragment
+            android:id="@+id/cutePawsFragment"
+            android:name="com.anibalbastias.android.cutepaws.presentation.ui.breeds.BreedsListFragment"
+            android:label="CutePawsFragment"
+            tools:layout="@layout/fragment_breeds_list">
+    </fragment>
+
+</navigation>
