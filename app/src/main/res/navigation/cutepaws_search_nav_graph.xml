@@ -19,6 +19,7 @@
             app:exitAnim="@anim/fade_out_fragment"
             app:popEnterAnim="@anim/fade_in_fragment"
             app:popExitAnim="@anim/fade_out_fragment" />
+
     </fragment>
 
     <fragment
@@ -26,6 +27,22 @@
         android:name="com.anibalbastias.android.cutepaws.presentation.ui.breedDetail.BreedsDetailFragment"
         android:label="ResultItemFragment"
         tools:layout="@layout/fragment_breeds_detail">
+
+        <action
+            android:id="@+id/action_breedDetailFragment_to_fullImageFragment"
+            app:destination="@id/fullImageFragment"
+            app:enterAnim="@anim/fade_in_fragment"
+            app:exitAnim="@anim/fade_out_fragment"
+            app:popEnterAnim="@anim/fade_in_fragment"
+            app:popExitAnim="@anim/fade_out_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fullImageFragment"
+        android:name="com.anibalbastias.android.cutepaws.presentation.ui.breedDetail.FullImageFragment"
+        android:label="ResultItemFragment"
+        tools:layout="@layout/fragment_full_image">
 
     </fragment>
 

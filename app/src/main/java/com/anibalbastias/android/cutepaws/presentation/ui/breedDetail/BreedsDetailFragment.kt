@@ -92,6 +92,9 @@ class BreedsDetailFragment : BaseModuleFragment(), BaseBindClickHandler<CutePaws
                 )
             }
             cutePawsList.set(breedList)
+
+            // Keep position for recyclerview
+            binding.resultItemContainer.dogsPhotoListRecyclerView.paginationForRecyclerScroll(itemPosition)
         }
     }
 
@@ -118,6 +121,10 @@ class BreedsDetailFragment : BaseModuleFragment(), BaseBindClickHandler<CutePaws
     }
 
     override fun onClickView(view: View, item: CutePawsItemViewData) {
-
+        // Share Data
+        sharedViewModel.fullImageViewData = item.imageUrl?.get() ?: String.empty()
+        nextNavigate(
+            nav = BreedsDetailFragmentDirections.actionBreedDetailFragmentToFullImageFragment().actionId
+        )
     }
 }

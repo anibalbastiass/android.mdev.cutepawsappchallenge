@@ -1,12 +1,28 @@
 package com.anibalbastias.android.cutepaws.presentation.util.adapter.base
 
+import android.widget.Filter
+import com.anibalbastias.android.cutepaws.presentation.ui.breeds.filter.CustomFilter
+import com.anibalbastias.android.cutepaws.presentation.ui.breeds.filter.FilterWordListener
+
 /**
  * Created by anibalbastias on 2019-08-12.
  *
  * Base recycler view adapter with
  * data binding that uses only one layout
  */
-class SingleLayoutBindRecyclerAdapter<T>(private val layoutId : Int, var list: List<T?>?, clickHandler: BaseBindClickHandler<T>? = null) : BaseBindRecyclerAdapter<T>(clickHandler) {
+class SingleLayoutBindRecyclerAdapter<T>(
+    private val layoutId: Int,
+    var list: List<T?>?,
+    clickHandler: BaseBindClickHandler<T>? = null,
+    var callback: FilterWordListener<T>? = null
+) : BaseBindRecyclerAdapter<T>(clickHandler) {
+
+    private var filterList: ArrayList<T?>? = null
+    private var filter: CustomFilter<T>? = null
+
+    init {
+        filterList = list as ArrayList<T?>?
+    }
 
     override fun getLayoutIfForPosition(position: Int): Int {
         return layoutId
@@ -23,5 +39,12 @@ class SingleLayoutBindRecyclerAdapter<T>(private val layoutId : Int, var list: L
     override fun setData(data: List<T>?) {
         list = data
         notifyDataSetChanged()
+    }
+
+    public override fun getFilter(): Filter? {
+        if (filter == null) {
+            filter = CustomFilter(filterList, this, callback)
+        }
+        return filter
     }
 }

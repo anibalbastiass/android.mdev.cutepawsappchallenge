@@ -16,6 +16,10 @@
             name="cutePawsItemListener"
             type="com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler" />
 
+        <variable
+            name="cutePawsItemFilter"
+            type="com.anibalbastias.android.cutepaws.presentation.ui.breeds.filter.FilterWordListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,6 +85,7 @@
                 bind:loadAdapterData="@{cutePawsViewModel.cutePawsList}"
                 bind:loadAdapterLayout="@{cutePawsViewModel.cutePawsItemLayout}"
                 bind:loadAdapterListener="@{cutePawsItemListener}"
+                bind:filter="@{cutePawsItemFilter}"
                 tools:listitem="@layout/view_cell_breed_item" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

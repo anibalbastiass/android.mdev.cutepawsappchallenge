@@ -1,37 +1,42 @@
 package com.anibalbastias.android.cutepaws.presentation.ui.breeds
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.anibalbastias.android.cutepaws.R
 import com.anibalbastias.android.cutepaws.base.module.getViewModel
 import com.anibalbastias.android.cutepaws.base.view.BaseModuleFragment
 import com.anibalbastias.android.cutepaws.databinding.FragmentBreedsListBinding
 import com.anibalbastias.android.cutepaws.presentation.appComponent
 import com.anibalbastias.android.cutepaws.presentation.getAppContext
+import com.anibalbastias.android.cutepaws.presentation.ui.breeds.filter.FilterWordListener
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsItemViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel
+import com.anibalbastias.android.cutepaws.presentation.util.*
 import com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler
-import com.anibalbastias.android.cutepaws.presentation.util.applyFontForToolbarTitle
-import com.anibalbastias.android.cutepaws.presentation.util.implementObserver
-import com.anibalbastias.android.cutepaws.presentation.util.initSwipe
-import com.anibalbastias.android.cutepaws.presentation.util.setNoArrowUpToolbar
+import com.anibalbastias.android.cutepaws.presentation.util.adapter.base.SingleLayoutBindRecyclerAdapter
+
 
 /**
  * Created by anibalbastias on 2019-11-25.
  */
 
-class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsItemViewData> {
+class BreedsListFragment : BaseModuleFragment(),
+    BaseBindClickHandler<CutePawsItemViewData>,
+    FilterWordListener<CutePawsItemViewData> {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_breeds_list
@@ -56,11 +61,33 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
         binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentBreedsListBinding
         binding.cutePawsViewModel = breedsViewModel
         binding.cutePawsItemListener = this
+        binding.cutePawsItemFilter = this
         binding.lifecycleOwner = this
 
         initToolbar()
         initViewModel()
         fetchBreeds()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.search_menu, menu)
+        val item: MenuItem = menu.findItem(R.id.action_search)
+        val searchView: SearchView = MenuItemCompat.getActionView(item) as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                val adapter = (binding.cutePawsListRecyclerView.adapter
+                        as? SingleLayoutBindRecyclerAdapter<CutePawsItemViewData>)
+                adapter?.getFilter()?.filter(query)
+                return false
+            }
+        })
     }
 
     private fun fetchBreeds() {
@@ -91,8 +118,7 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
             cutePawsList.set(viewData?.breedList)
 
             // Keep position for recyclerview
-            paginationForRecyclerScroll()
-            binding.cutePawsListRecyclerView.scrollToPosition(itemPosition.get())
+            binding.cutePawsListRecyclerView.paginationForRecyclerScroll(itemPosition)
 
             getBreedsImageLiveData().value?.data?.let {
                 setImageBreedsData(it)
@@ -111,20 +137,6 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
             if (viewData?.disclaimer?.contains(it.breed!!, ignoreCase = true) == true)
                 it.imageUrl?.set(viewData.disclaimer)
         }
-    }
-
-    private fun paginationForRecyclerScroll() {
-        binding.cutePawsListRecyclerView?.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                breedsViewModel.itemPosition.set(
-                    (binding.cutePawsListRecyclerView?.layoutManager as
-                            GridLayoutManager).findFirstVisibleItemPosition()
-                )
-            }
-        })
     }
 
     private fun getImageViewFromChild(view: View): ImageView {
@@ -168,5 +180,15 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
 
     private fun showErrorView() {
         breedsViewModel.isError.set(true)
+    }
+
+    override fun onFilterByWord(
+        word: String,
+        selectedItem: CutePawsItemViewData,
+        filteredItems: ArrayList<CutePawsItemViewData>
+    ) {
+        if (selectedItem.breed?.contains(word, ignoreCase = true) == true) {
+            filteredItems.add(selectedItem)
+        }
     }
 }
