@@ -2,9 +2,15 @@ package com.anibalbastias.android.cutepaws.presentation.ui.breeds
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.anibalbastias.android.cutepaws.R
 import com.anibalbastias.android.cutepaws.base.module.getViewModel
 import com.anibalbastias.android.cutepaws.base.view.BaseModuleFragment
@@ -63,6 +69,15 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
                 getSearchSongsResultsData()
             }
 
+            getBreedsImageLiveData().value?.data?.let {
+                setImageBreedsData(it)
+            } ?: run {
+                // Set Images for each breed
+                cutePawsList.get()?.forEach {
+                    getRandomImageBreed(it.breed?.toLowerCase()!!)
+                }
+            }
+
             // Set Swipe Refresh Layout
             binding.cutePawsListSwipeRefreshLayout?.initSwipe {
                 getSearchSongsResultsData()
@@ -86,14 +101,30 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
 
     private fun setImageBreedsData(viewData: CutePawsViewData?) {
         breedsViewModel.isError.set(false)
-        breedsViewModel?.cutePawsList.get()?.forEach {
+        breedsViewModel.cutePawsList.get()?.forEach {
             if (viewData?.disclaimer?.contains(it.breed!!, ignoreCase = true) == true)
                 it.imageUrl?.set(viewData.disclaimer)
         }
     }
 
+    private fun getImageViewFromChild(view: View): ImageView {
+        val cardView = (view as? CardView)
+        val cl1 = (cardView?.getChildAt(0) as? ConstraintLayout)
+        return (cl1?.getChildAt(0) as? ImageView)!!
+    }
+
     override fun onClickView(view: View, item: CutePawsItemViewData) {
-        activity?.toast(item.breed)
+        val extras = FragmentNavigatorExtras(
+            getImageViewFromChild(view) to "secondTransitionName"
+        )
+        ViewCompat.setTransitionName(getImageViewFromChild(view), "secondTransitionName")
+
+        // Share Data
+        sharedViewModel.breedItemViewData = item
+        nextNavigate(
+            nav = BreedsListFragmentDirections.actionCutePawsFragmentToBreedDetailFragment().actionId,
+            extras = extras
+        )
     }
 
     private fun initToolbar() {
@@ -110,17 +141,9 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
             errorBlock = { showErrorView() })
 
         // Fetch Image Breeds
-        breedsViewModel.getBreedsImageLiveData().observeForever {
-            handleLiveData(it.status, it.data, it.message)
-        }
-    }
-
-    private fun handleLiveData(status: ResourceState, data: CutePawsViewData?, message: String?) {
-        when (status) {
-            ResourceState.SUCCESS -> setImageBreedsData(data)
-            else -> {
-            }
-        }
+        implementObserver(breedsViewModel.getBreedsImageLiveData(),
+            successBlock = { viewData -> setImageBreedsData(viewData) },
+            errorBlock = { showErrorView() })
     }
 
     private fun showErrorView() {
