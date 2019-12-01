@@ -72,14 +72,17 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="100dp"
+            android:background="@color/backgroundColor"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <include
                 android:id="@+id/resultItemContainer"
                 layout="@layout/fragment_breeds_detail_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                bind:sharedViewModel="@{sharedViewModel}"
+                bind:cutePawsItemListener="@{cutePawsItemListener}"
+                bind:cutePawsViewModel="@{cutePawsViewModel}" />
 
         </androidx.core.widget.NestedScrollView>
 

@@ -1,7 +1,6 @@
 package com.anibalbastias.android.cutepaws.data.cutepaws.deserializer
 
 import com.anibalbastias.android.cutepaws.data.dataStoreFactory.breeds.model.CutePawsData
-import com.google.gson.Gson
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -24,7 +23,7 @@ class MessageDeserializer : JsonDeserializer<CutePawsData> {
          */
 
         val messageObject: CutePawsData? = null
-        val jsonObject = json!!.asJsonObject
+        val jsonObject = json?.asJsonObject!!
 
         if (jsonObject.has("message")) {
             val elem = jsonObject["message"]

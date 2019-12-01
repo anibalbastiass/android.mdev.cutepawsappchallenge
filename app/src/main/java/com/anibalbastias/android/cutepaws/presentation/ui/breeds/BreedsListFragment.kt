@@ -69,12 +69,12 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
                 setBreedsData(it)
             } ?: run {
                 isLoading.set(true)
-                getSearchSongsResultsData()
+                getBreedListAllData()
             }
 
             // Set Swipe Refresh Layout
             binding.cutePawsListSwipeRefreshLayout?.initSwipe {
-                getSearchSongsResultsData()
+                getBreedListAllData()
             }
         }
     }
