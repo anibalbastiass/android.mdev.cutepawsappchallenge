@@ -8,21 +8,24 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anibalbastias.android.cutepaws.R
 import com.anibalbastias.android.cutepaws.base.module.getViewModel
 import com.anibalbastias.android.cutepaws.base.view.BaseModuleFragment
-import com.anibalbastias.android.cutepaws.base.view.ResourceState
 import com.anibalbastias.android.cutepaws.databinding.FragmentBreedsListBinding
 import com.anibalbastias.android.cutepaws.presentation.appComponent
 import com.anibalbastias.android.cutepaws.presentation.getAppContext
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsItemViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel
-import com.anibalbastias.android.cutepaws.presentation.util.*
 import com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler
+import com.anibalbastias.android.cutepaws.presentation.util.applyFontForToolbarTitle
+import com.anibalbastias.android.cutepaws.presentation.util.implementObserver
+import com.anibalbastias.android.cutepaws.presentation.util.initSwipe
+import com.anibalbastias.android.cutepaws.presentation.util.setNoArrowUpToolbar
 
 /**
  * Created by anibalbastias on 2019-11-25.
@@ -40,8 +43,8 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
         super.onCreate(savedInstanceState)
         appComponent().inject(this)
         navBaseViewModel = getViewModel(viewModelFactory)
-        sharedViewModel = activity!!.getViewModel(SavedStateViewModelFactory(getAppContext(), this))
         breedsViewModel = getViewModel(viewModelFactory)
+        sharedViewModel = activity!!.getViewModel(SavedStateViewModelFactory(getAppContext(), this))
         setHasOptionsMenu(true)
     }
 
@@ -69,15 +72,6 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
                 getSearchSongsResultsData()
             }
 
-            getBreedsImageLiveData().value?.data?.let {
-                setImageBreedsData(it)
-            } ?: run {
-                // Set Images for each breed
-                cutePawsList.get()?.forEach {
-                    getRandomImageBreed(it.breed?.toLowerCase()!!)
-                }
-            }
-
             // Set Swipe Refresh Layout
             binding.cutePawsListSwipeRefreshLayout?.initSwipe {
                 getSearchSongsResultsData()
@@ -87,14 +81,26 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
 
     private fun setBreedsData(viewData: CutePawsViewData?) {
         breedsViewModel.apply {
+
+            // Notify observers
             isLoading.set(false)
             isError.set(false)
             binding.cutePawsListSwipeRefreshLayout?.isRefreshing = false
+
+            // Set data
             cutePawsList.set(viewData?.breedList)
 
-            // Set Images for each breed
-            viewData?.breedList?.forEach {
-                getRandomImageBreed(it.breed?.toLowerCase()!!)
+            // Keep position for recyclerview
+            paginationForRecyclerScroll()
+            binding.cutePawsListRecyclerView.scrollToPosition(itemPosition.get())
+
+            getBreedsImageLiveData().value?.data?.let {
+                setImageBreedsData(it)
+            } ?: run {
+                // Set Images for each breed
+                viewData?.breedList?.forEach {
+                    getRandomImageBreed(it.breed?.toLowerCase()!!)
+                }
             }
         }
     }
@@ -105,6 +111,20 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
             if (viewData?.disclaimer?.contains(it.breed!!, ignoreCase = true) == true)
                 it.imageUrl?.set(viewData.disclaimer)
         }
+    }
+
+    private fun paginationForRecyclerScroll() {
+        binding.cutePawsListRecyclerView?.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                breedsViewModel.itemPosition.set(
+                    (binding.cutePawsListRecyclerView?.layoutManager as
+                            GridLayoutManager).findFirstVisibleItemPosition()
+                )
+            }
+        })
     }
 
     private fun getImageViewFromChild(view: View): ImageView {

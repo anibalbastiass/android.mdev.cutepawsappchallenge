@@ -2,6 +2,7 @@ package com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel
 
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import com.anibalbastias.android.cutepaws.R
 import com.anibalbastias.android.cutepaws.base.subscriber.BaseSubscriber
@@ -30,6 +31,7 @@ class BreedsViewModel @Inject constructor(
     var isLoading: ObservableBoolean = ObservableBoolean(false)
     var isError: ObservableBoolean = ObservableBoolean(false)
     var cutePawsList: ObservableField<ArrayList<CutePawsItemViewData>> = ObservableField(arrayListOf())
+    var itemPosition: ObservableInt = ObservableInt(0)
     // endregion
 
     var cutePawsItemLayout: Int? = R.layout.view_cell_breed_item
