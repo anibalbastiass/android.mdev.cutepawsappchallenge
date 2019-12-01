@@ -12,11 +12,9 @@
             name="cutePawsViewModel"
             type="com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel" />
 
-        <!--
         <variable
             name="cutePawsItemListener"
-            type="com.anibalbastias.android.cutepaws.presentation.ui.breeds.interfaces.CutePawsItemListener" />
-        -->
+            type="com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler" />
 
     </data>
 
@@ -35,7 +33,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:theme="@style/ToolBarDetailsStyle"
             app:titleTextColor="@color/primaryColor"
-            tools:title="@string/app_name" />
+            tools:title="@string/app_name" >
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_placeholder"
+                android:gravity="start"
+                android:tint="@color/primaryColor" />
+
+        </androidx.appcompat.widget.Toolbar>
 
         <com.anibalbastias.android.cutepaws.presentation.util.widget.DotLoadingIndicatorView
             android:id="@+id/cutePawsLoader"
@@ -71,14 +78,10 @@
                 android:paddingBottom="8dp"
                 android:scrollbars="vertical"
                 android:visibility="visible"
-                tools:listitem="@layout/view_cell_breed_item" />
-
-            <!--
-
-            bind:loadAdapterData="@{cutePawsViewModel.cutePawsList}"
+                bind:loadAdapterData="@{cutePawsViewModel.cutePawsList}"
                 bind:loadAdapterLayout="@{cutePawsViewModel.cutePawsItemLayout}"
                 bind:loadAdapterListener="@{cutePawsItemListener}"
-            -->
+                tools:listitem="@layout/view_cell_breed_item" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -87,7 +90,7 @@
             layout="@layout/view_cell_shop_cart_empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="gone"
+            android:visibility="@{cutePawsViewModel.isError() == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

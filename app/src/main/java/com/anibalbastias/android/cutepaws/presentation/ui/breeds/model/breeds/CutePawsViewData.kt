@@ -16,5 +16,5 @@ data class CutePawsViewData(
     // Possible message objects
     var disclaimer: String? = null,
     var list: ArrayList<String>? = null,
-    var hashMap: HashMap<String, ArrayList<String>>? = null
+    var breedList: ArrayList<CutePawsItemViewData>? = null
 ) : Parcelable
