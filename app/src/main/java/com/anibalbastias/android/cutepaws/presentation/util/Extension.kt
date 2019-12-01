@@ -3,7 +3,6 @@ package com.anibalbastias.android.cutepaws.presentation.util
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.res.Configuration
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,7 +24,6 @@ import com.anibalbastias.android.cutepaws.base.view.Resource
 import com.anibalbastias.android.cutepaws.base.view.ResourceState
 import com.anibalbastias.android.cutepaws.presentation.GlideApp
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.util.*
 
 fun <T> LiveData<T>.initObserver(lifecycleOwner: LifecycleOwner, observer: (T?) -> Unit) {
@@ -84,28 +82,14 @@ fun ImageView.loadImage(url: String) =
 fun ImageView.loadImageWithPlaceholderCenterCrop(url: String) =
     GlideApp.with(context)
         .load(url)
-        .centerCrop()
+        .centerInside()
         .placeholder(R.drawable.ic_placeholder)
-        .transition(DrawableTransitionOptions.withCrossFade())
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .skipMemoryCache(true)
+        .skipMemoryCache(false)
         .into(this)
 
 fun isTablet(context: Context): Boolean = try {
     context.resources.getBoolean(R.bool.isTablet)
-} catch (ex: Exception) {
-    false
-}
-
-fun isPhone(context: Context): Boolean = try {
-    !context.resources.getBoolean(R.bool.isTablet)
-} catch (ex: Exception) {
-    false
-}
-
-
-fun isPortrait(context: Context): Boolean = try {
-    context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 } catch (ex: Exception) {
     false
 }

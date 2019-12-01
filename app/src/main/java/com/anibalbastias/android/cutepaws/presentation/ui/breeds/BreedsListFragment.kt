@@ -1,5 +1,6 @@
 package com.anibalbastias.android.cutepaws.presentation.ui.breeds
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -106,6 +107,7 @@ class BreedsListFragment : BaseModuleFragment(),
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun setBreedsData(viewData: CutePawsViewData?) {
         breedsViewModel.apply {
 
