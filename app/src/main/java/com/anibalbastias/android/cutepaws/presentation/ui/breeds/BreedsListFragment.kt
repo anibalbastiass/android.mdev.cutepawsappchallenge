@@ -8,18 +8,24 @@ import androidx.lifecycle.SavedStateViewModelFactory
 import com.anibalbastias.android.cutepaws.R
 import com.anibalbastias.android.cutepaws.base.module.getViewModel
 import com.anibalbastias.android.cutepaws.base.view.BaseModuleFragment
+import com.anibalbastias.android.cutepaws.base.view.ResourceState
 import com.anibalbastias.android.cutepaws.databinding.FragmentBreedsListBinding
 import com.anibalbastias.android.cutepaws.presentation.appComponent
 import com.anibalbastias.android.cutepaws.presentation.getAppContext
+import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsItemViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel
-import com.anibalbastias.android.cutepaws.presentation.util.*
+import com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler
+import com.anibalbastias.android.cutepaws.presentation.util.applyFontForToolbarTitle
+import com.anibalbastias.android.cutepaws.presentation.util.implementObserver
+import com.anibalbastias.android.cutepaws.presentation.util.setNoArrowUpToolbar
+import com.anibalbastias.android.cutepaws.presentation.util.toast
 
 /**
  * Created by anibalbastias on 2019-11-25.
  */
 
-class BreedsListFragment : BaseModuleFragment() {
+class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsItemViewData> {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_breeds_list
@@ -43,7 +49,8 @@ class BreedsListFragment : BaseModuleFragment() {
 
         binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentBreedsListBinding
         binding.cutePawsViewModel = breedsViewModel
-        //binding.lifecycleOwner = this
+        binding.cutePawsItemListener = this
+        binding.lifecycleOwner = this
 
         initToolbar()
         initViewModel()
@@ -61,8 +68,30 @@ class BreedsListFragment : BaseModuleFragment() {
         }
     }
 
-    private fun setBreedsData(it: CutePawsViewData?) {
-        it
+    private fun setBreedsData(viewData: CutePawsViewData?) {
+        breedsViewModel.apply {
+            isLoading.set(false)
+            isError.set(false)
+            binding.cutePawsListSwipeRefreshLayout?.isRefreshing = false
+            cutePawsList.set(viewData?.breedList)
+
+            // Set Images for each breed
+            viewData?.breedList?.forEach {
+                getRandomImageBreed(it.breed?.toLowerCase()!!)
+            }
+        }
+    }
+
+    private fun setImageBreedsData(viewData: CutePawsViewData?) {
+        breedsViewModel.isError.set(false)
+        breedsViewModel?.cutePawsList.get()?.forEach {
+            if (viewData?.disclaimer?.contains(it.breed!!, ignoreCase = true) == true)
+                it.imageUrl?.set(viewData.disclaimer)
+        }
+    }
+
+    override fun onClickView(view: View, item: CutePawsItemViewData) {
+        activity?.toast(item.breed)
     }
 
     private fun initToolbar() {
@@ -76,15 +105,23 @@ class BreedsListFragment : BaseModuleFragment() {
         // Fetch Breeds
         implementObserver(breedsViewModel.getBreedsLiveData(),
             successBlock = { viewData -> setBreedsData(viewData) },
-            loadingBlock = { showLoadingView() },
-            errorBlock = { showErrorView(it) })
+            errorBlock = { showErrorView() })
+
+        // Fetch Image Breeds
+        breedsViewModel.getBreedsImageLiveData().observeForever {
+            handleLiveData(it.status, it.data, it.message)
+        }
     }
 
-    private fun showErrorView(errorMessage: String?) {
-
+    private fun handleLiveData(status: ResourceState, data: CutePawsViewData?, message: String?) {
+        when (status) {
+            ResourceState.SUCCESS -> setImageBreedsData(data)
+            else -> {
+            }
+        }
     }
 
-    private fun showLoadingView() {
-
+    private fun showErrorView() {
+        breedsViewModel.isError.set(true)
     }
 }

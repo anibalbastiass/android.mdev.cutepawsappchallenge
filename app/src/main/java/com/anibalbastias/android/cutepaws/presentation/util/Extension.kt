@@ -70,10 +70,11 @@ fun ImageView.loadImageWithoutPlaceholder(url: String) =
         .skipMemoryCache(true)
         .into(this)
 
-fun ImageView.loadImageWithoutPlaceholderCenterCrop(url: String) =
+fun ImageView.loadImageWithPlaceholderCenterCrop(url: String) =
     GlideApp.with(context)
         .load(url)
         .centerCrop()
+        .placeholder(R.drawable.ic_placeholder)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .skipMemoryCache(true)
         .into(this)
