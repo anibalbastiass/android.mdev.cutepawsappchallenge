@@ -11,11 +11,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.ObservableInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.anibalbastias.android.cutepaws.R
@@ -67,6 +69,14 @@ fun String.Companion.empty() = ""
 fun ImageView.loadImageWithoutPlaceholder(url: String) =
     GlideApp.with(context)
         .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .skipMemoryCache(true)
+        .into(this)
+
+fun ImageView.loadImage(url: String) =
+    GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.ic_placeholder)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .skipMemoryCache(true)
         .into(this)
@@ -183,4 +193,19 @@ fun RecyclerView.runLayoutAnimation() {
     layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down)
     adapter?.notifyDataSetChanged()
     scheduleLayoutAnimation()
+}
+
+fun RecyclerView.paginationForRecyclerScroll(itemPosition: ObservableInt) {
+    addOnScrollListener(object :
+        RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            itemPosition.set(
+                (layoutManager as
+                        GridLayoutManager).findFirstVisibleItemPosition()
+            )
+        }
+    })
+    scrollToPosition(itemPosition.get())
 }

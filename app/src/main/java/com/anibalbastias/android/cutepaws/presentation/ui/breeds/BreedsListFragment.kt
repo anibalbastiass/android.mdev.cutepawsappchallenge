@@ -21,11 +21,8 @@ import com.anibalbastias.android.cutepaws.presentation.getAppContext
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsItemViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel
+import com.anibalbastias.android.cutepaws.presentation.util.*
 import com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler
-import com.anibalbastias.android.cutepaws.presentation.util.applyFontForToolbarTitle
-import com.anibalbastias.android.cutepaws.presentation.util.implementObserver
-import com.anibalbastias.android.cutepaws.presentation.util.initSwipe
-import com.anibalbastias.android.cutepaws.presentation.util.setNoArrowUpToolbar
 
 /**
  * Created by anibalbastias on 2019-11-25.
@@ -91,8 +88,7 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
             cutePawsList.set(viewData?.breedList)
 
             // Keep position for recyclerview
-            paginationForRecyclerScroll()
-            binding.cutePawsListRecyclerView.scrollToPosition(itemPosition.get())
+            binding.cutePawsListRecyclerView.paginationForRecyclerScroll(itemPosition)
 
             getBreedsImageLiveData().value?.data?.let {
                 setImageBreedsData(it)
@@ -111,20 +107,6 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
             if (viewData?.disclaimer?.contains(it.breed!!, ignoreCase = true) == true)
                 it.imageUrl?.set(viewData.disclaimer)
         }
-    }
-
-    private fun paginationForRecyclerScroll() {
-        binding.cutePawsListRecyclerView?.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                breedsViewModel.itemPosition.set(
-                    (binding.cutePawsListRecyclerView?.layoutManager as
-                            GridLayoutManager).findFirstVisibleItemPosition()
-                )
-            }
-        })
     }
 
     private fun getImageViewFromChild(view: View): ImageView {

@@ -15,6 +15,13 @@ fun ImageView.setImageUrl(imageUrl: String?) {
     }
 }
 
+@BindingAdapter("setImageUrlFull")
+fun ImageView.setImageUrlFull(imageUrl: String?) {
+    imageUrl?.let {
+        loadImage(imageUrl)
+    }
+}
+
 @BindingAdapter(value = ["loadAdapterData", "loadAdapterLayout", "loadAdapterListener"], requireAll = false)
 fun <T> RecyclerView.loadAdapterData(list: MutableList<T>?, layout: Int?, callback: BaseBindClickHandler<T>? = null) {
     context?.run {
