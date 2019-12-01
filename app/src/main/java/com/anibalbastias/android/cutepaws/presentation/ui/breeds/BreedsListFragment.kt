@@ -15,11 +15,8 @@ import com.anibalbastias.android.cutepaws.presentation.getAppContext
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsItemViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsViewData
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel
+import com.anibalbastias.android.cutepaws.presentation.util.*
 import com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler
-import com.anibalbastias.android.cutepaws.presentation.util.applyFontForToolbarTitle
-import com.anibalbastias.android.cutepaws.presentation.util.implementObserver
-import com.anibalbastias.android.cutepaws.presentation.util.setNoArrowUpToolbar
-import com.anibalbastias.android.cutepaws.presentation.util.toast
 
 /**
  * Created by anibalbastias on 2019-11-25.
@@ -63,6 +60,11 @@ class BreedsListFragment : BaseModuleFragment(), BaseBindClickHandler<CutePawsIt
                 setBreedsData(it)
             } ?: run {
                 isLoading.set(true)
+                getSearchSongsResultsData()
+            }
+
+            // Set Swipe Refresh Layout
+            binding.cutePawsListSwipeRefreshLayout?.initSwipe {
                 getSearchSongsResultsData()
             }
         }
