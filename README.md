@@ -32,7 +32,8 @@ Implement test for ViewModel throw captors, mocks for check stats for LiveData t
 - Continuous Integration
 With Github Actions feature (Top tab), this repository is processing throw CI.
 
-## Screenshot
+## Screenshots
 
+![Breed List](https://raw.githubusercontent.com/anibalbastiass/android.mdev.cutepawsappchallenge/develop/screenshots/device-2019-12-01-083211.png) ![Breed Detail](https://raw.githubusercontent.com/anibalbastiass/android.mdev.cutepawsappchallenge/develop/screenshots/device-2019-12-01-083414.png)
 
 
