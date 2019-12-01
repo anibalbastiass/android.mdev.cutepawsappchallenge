@@ -1,7 +1,9 @@
 package com.anibalbastias.android.cutepaws.base.view
 
 import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.anibalbastias.android.cutepaws.presentation.ui.breeds.model.breeds.CutePawsItemViewData
 import javax.inject.Inject
 
 /**
@@ -17,13 +19,11 @@ class SharedViewModel @Inject constructor(val state: SavedStateHandle) : BaseVie
 
     private val savedStateHandle = state
 
-    var isLoading: ObservableBoolean = ObservableBoolean(false)
+    private val breedItemLiveData: MutableLiveData<CutePawsItemViewData> = savedStateHandle.getLiveData(RESULT_ITEM_KEY)
 
-//    private val resultItemLiveData: MutableLiveData<CollectionResultItemViewData> = savedStateHandle.getLiveData(RESULT_ITEM_KEY)
-//
-//    var resultItemViewData: CollectionResultItemViewData
-//        get() = resultItemLiveData.value ?: CollectionResultItemViewData()
-//        set(value) {
-//            resultItemLiveData.value = value
-//        }
+    var breedItemViewData: CutePawsItemViewData
+        get() = breedItemLiveData.value ?: CutePawsItemViewData()
+        set(value) {
+            breedItemLiveData.value = value
+        }
 }

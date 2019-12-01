@@ -6,4 +6,5 @@
     <string name="inc_button" translatable="false">+</string>
     <string name="addCartButton">ADD TO CART</string>
     <string name="cutePawsButtonDescription">Total Counter</string>
+    <string name="toolbar_image">Cute Paws</string>
 </resources>

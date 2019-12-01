@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="sharedViewModel"
+            type="com.anibalbastias.android.cutepaws.base.view.SharedViewModel" />
+
+        <variable
+            name="cutePawsViewModel"
+            type="com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel.BreedsViewModel" />
+
+        <variable
+            name="cutePawsItemListener"
+            type="com.anibalbastias.android.cutepaws.presentation.util.adapter.base.BaseBindClickHandler" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
+        android:minHeight="500dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tracksTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/opensans_regular"
+            android:maxLines="2"
+            android:text="@{sharedViewModel.breedItemViewData.subBreeds}"
+            android:textColor="@color/normalTextColor"
+            android:textSize="16sp"
+            android:visibility="@{cutePawsViewModel.isLoading == false ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Tracks" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tracksListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingBottom="20dp"
+            android:scrollbars="vertical"
+            android:visibility="@{cutePawsViewModel.isLoading == false ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tracksTitle"
+            bind:loadAdapterData="@{cutePawsViewModel.cutePawsList}"
+            bind:loadAdapterLayout="@{cutePawsViewModel.cutePawsItemLayout}"
+            bind:loadAdapterListener="@{cutePawsItemListener}"
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/view_cell_breed_item" />
+
+        <com.anibalbastias.android.cutepaws.presentation.util.widget.DotLoadingIndicatorView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:visibility="@{cutePawsViewModel.isLoading == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tracksListRecyclerView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

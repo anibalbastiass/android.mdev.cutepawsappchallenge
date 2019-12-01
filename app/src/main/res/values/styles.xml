@@ -71,4 +71,10 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="ToolbarCutePawsDetails" parent="ToolBarDetailsStyle">
+        <item name="android:tint">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+    </style>
+
 </resources>

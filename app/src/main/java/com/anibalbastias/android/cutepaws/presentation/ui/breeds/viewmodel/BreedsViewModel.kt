@@ -2,6 +2,7 @@ package com.anibalbastias.android.cutepaws.presentation.ui.breeds.viewmodel
 
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import com.anibalbastias.android.cutepaws.R
 import com.anibalbastias.android.cutepaws.base.subscriber.BaseSubscriber
@@ -9,6 +10,7 @@ import com.anibalbastias.android.cutepaws.base.view.BaseViewModel
 import com.anibalbastias.android.cutepaws.base.view.Resource
 import com.anibalbastias.android.cutepaws.base.view.ResourceState
 import com.anibalbastias.android.cutepaws.domain.breeds.usecase.GetBreedsUseCase
+import com.anibalbastias.android.cutepaws.domain.breeds.usecase.GetDogImagesByBreedUseCase
 import com.anibalbastias.android.cutepaws.domain.breeds.usecase.GetRandomImageBreedUseCase
 import com.anibalbastias.android.cutepaws.presentation.context
 import com.anibalbastias.android.cutepaws.presentation.ui.breeds.mapper.breeds.BreedsViewDataMapper
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class BreedsViewModel @Inject constructor(
     private val getBreedsUseCase: GetBreedsUseCase,
     private val getRandomImageBreedUseCase: GetRandomImageBreedUseCase,
+    private val getDogImagesByBreedUseCase: GetDogImagesByBreedUseCase,
     private val breedsViewDataMapper: BreedsViewDataMapper
 ) : BaseViewModel() {
 
@@ -30,6 +33,7 @@ class BreedsViewModel @Inject constructor(
     var isLoading: ObservableBoolean = ObservableBoolean(false)
     var isError: ObservableBoolean = ObservableBoolean(false)
     var cutePawsList: ObservableField<ArrayList<CutePawsItemViewData>> = ObservableField(arrayListOf())
+    var itemPosition: ObservableInt = ObservableInt(0)
     // endregion
 
     var cutePawsItemLayout: Int? = R.layout.view_cell_breed_item
@@ -37,6 +41,7 @@ class BreedsViewModel @Inject constructor(
     override fun onCleared() {
         getBreedsUseCase.dispose()
         getRandomImageBreedUseCase.dispose()
+        getDogImagesByBreedUseCase.dispose()
         super.onCleared()
     }
 
@@ -46,9 +51,12 @@ class BreedsViewModel @Inject constructor(
 
     private val getBreedsImageLiveData: MutableLiveData<Resource<CutePawsViewData?>> = MutableLiveData()
     fun getBreedsImageLiveData() = getBreedsImageLiveData
+
+    private val getDogImagesByBreedLiveData: MutableLiveData<Resource<CutePawsViewData?>> = MutableLiveData()
+    fun getDogImagesByBreedLiveData() = getDogImagesByBreedLiveData
     //endregion
 
-    fun getSearchSongsResultsData() {
+    fun getBreedListAllData() {
         isLoading.set(true)
         getBreedsLiveData.postValue(Resource(ResourceState.LOADING, null, null))
 
@@ -67,6 +75,17 @@ class BreedsViewModel @Inject constructor(
             BaseSubscriber(
                 context?.applicationContext, this, breedsViewDataMapper,
                 getBreedsImageLiveData, isLoading, isError
+            ), breed
+        )
+    }
+
+    fun getDogImagesByBreed(breed: String) {
+        getDogImagesByBreedLiveData.postValue(Resource(ResourceState.LOADING, null, null))
+
+        return getDogImagesByBreedUseCase.execute(
+            BaseSubscriber(
+                context?.applicationContext, this, breedsViewDataMapper,
+                getDogImagesByBreedLiveData, isLoading, isError
             ), breed
         )
     }

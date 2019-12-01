@@ -23,6 +23,7 @@ import com.anibalbastias.android.cutepaws.base.view.Resource
 import com.anibalbastias.android.cutepaws.base.view.ResourceState
 import com.anibalbastias.android.cutepaws.presentation.GlideApp
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.util.*
 
 fun <T> LiveData<T>.initObserver(lifecycleOwner: LifecycleOwner, observer: (T?) -> Unit) {
@@ -75,6 +76,7 @@ fun ImageView.loadImageWithPlaceholderCenterCrop(url: String) =
         .load(url)
         .centerCrop()
         .placeholder(R.drawable.ic_placeholder)
+        .transition(DrawableTransitionOptions.withCrossFade())
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .skipMemoryCache(true)
         .into(this)

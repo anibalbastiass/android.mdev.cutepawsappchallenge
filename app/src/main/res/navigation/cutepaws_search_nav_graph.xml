@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/cutepaws_search_nav_graph"
-        app:startDestination="@id/cutePawsFragment"
-        tools:ignore="UnusedNavigation">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cutepaws_search_nav_graph"
+    app:startDestination="@id/cutePawsFragment"
+    tools:ignore="UnusedNavigation">
 
     <fragment
-            android:id="@+id/cutePawsFragment"
-            android:name="com.anibalbastias.android.cutepaws.presentation.ui.breeds.BreedsListFragment"
-            android:label="CutePawsFragment"
-            tools:layout="@layout/fragment_breeds_list">
+        android:id="@+id/cutePawsFragment"
+        android:name="com.anibalbastias.android.cutepaws.presentation.ui.breeds.BreedsListFragment"
+        android:label="CutePawsFragment"
+        tools:layout="@layout/fragment_breeds_list">
+
+        <action
+            android:id="@+id/action_cutePawsFragment_to_breedDetailFragment"
+            app:destination="@id/breedDetailFragment"
+            app:enterAnim="@anim/fade_in_fragment"
+            app:exitAnim="@anim/fade_out_fragment"
+            app:popEnterAnim="@anim/fade_in_fragment"
+            app:popExitAnim="@anim/fade_out_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/breedDetailFragment"
+        android:name="com.anibalbastias.android.cutepaws.presentation.ui.breedDetail.BreedsDetailFragment"
+        android:label="ResultItemFragment"
+        tools:layout="@layout/fragment_breeds_detail">
+
     </fragment>
 
 </navigation>

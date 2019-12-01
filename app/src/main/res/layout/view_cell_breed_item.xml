@@ -50,7 +50,9 @@
                 bind:layout_constraintStart_toStartOf="parent"
                 bind:layout_constraintTop_toTopOf="parent"
                 bind:setImageUrl="@{item.imageUrl}"
-                tools:src="@drawable/ic_placeholder" />
+                android:transitionName="firstTransitionName"
+                tools:src="@drawable/ic_placeholder"
+                tools:ignore="UnusedAttribute" />
 
             <ImageView
                 android:id="@+id/imageView"
@@ -61,7 +63,8 @@
                 android:src="@drawable/top_detail_background"
                 bind:layout_constraintBottom_toBottomOf="parent"
                 bind:layout_constraintEnd_toEndOf="parent"
-                bind:layout_constraintStart_toStartOf="parent" />
+                bind:layout_constraintStart_toStartOf="parent"
+                tools:ignore="UnusedAttribute" />
 
             <TextView
                 android:id="@+id/cutePawsItemTitle"
@@ -79,8 +82,8 @@
                 bind:layout_constraintBottom_toBottomOf="parent"
                 bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintStart_toStartOf="parent"
-                tools:text="Title"
-                tools:ignore="UnusedAttribute" />
+                tools:ignore="UnusedAttribute"
+                tools:text="Title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
