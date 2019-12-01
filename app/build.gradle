@@ -126,7 +126,6 @@ dependencies {
     // RxJava support for Room
     implementation presentationDependencies.roomRxJava
     implementation presentationDependencies.lcReactiveStreams
-    implementation presentationDependencies.internetAvaibility
 
     // Glide
     api presentationDependencies.glide
